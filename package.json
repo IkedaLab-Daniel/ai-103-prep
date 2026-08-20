@@ -1,0 +1,25 @@
+{
+  "name": "ai-103-prep",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sample-call-in-javascript.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IkedaLab-Daniel/ai-103-prep.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IkedaLab-Daniel/ai-103-prep/issues"
+  },
+  "homepage": "https://github.com/IkedaLab-Daniel/ai-103-prep#readme",
+  "dependencies": {
+    "@azure/identity": "^4.13.2",
+    "dotenv": "^17.4.2",
+    "openai": "^7.5.0"
+  }
+}

@@ -9,7 +9,7 @@ client = OpenAI(
     api_key=os.getenv("AZURE_OPENAI_API_KEY"),
     base_url=os.getenv("AZURE_OPENAI_ENDPOINT"),
 )
-
+ 
 user_input = input("You: ") 
 
 response = client.chat.completions.create(
