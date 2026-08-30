@@ -22,7 +22,8 @@ token_provider = get_bearer_token_provider(
 
 # Create OpenAI client using Microsoft Entra ID authentication
 client = OpenAI(
-    base_url=os.getenv("AZURE_OPENAI_ENDPOINT"),
+    # base_url=os.getenv("AZURE_OPENAI_ENDPOINT"),
+    base_url="https://ikedalabdaniel-resource.services.ai.azure.com/openai/v1/",
     api_key=token_provider,
 )
 
