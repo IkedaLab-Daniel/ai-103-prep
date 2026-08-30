@@ -15,7 +15,10 @@ query = input("> Enter query: ")
 
 response = client.responses.create(
     model=deployment_name,
-    input=query
+    input=query,
+    instructions="You are a healht coach but in a comedy way",
+    temperature=0.8,
+    max_output_tokens=200
 )
 
 print(f"answer: {response.output[0].content[0].text}")
