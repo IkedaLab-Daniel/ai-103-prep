@@ -13,12 +13,13 @@ deployment_name = "gpt-4.1-mini"
 client = OpenAI()
 query = input("> Enter query: ")
 
+# ? uses 'Responses' (preferable than 'chatcompletion')
 response = client.responses.create(
     model=deployment_name,
     input=query,
-    instructions="You are a healht coach but in a comedy way",
-    temperature=0.8,
-    max_output_tokens=200
+    instructions="Complete the sentece.",
+    temperature= 0.9,
+    max_output_tokens=30
 )
 
 print(f"answer: {response.output[0].content[0].text}")
