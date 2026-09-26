@@ -32,7 +32,7 @@ def main():
                 print("Please enter a prompt.")
                 continue
 
-            # ! Get a response - chat completions
+            # ! Get a response - chat completions ——————————————————————————————
             # completion = openai_client.chat.completions.create(
             #     model=model_deployment,
             #     messages=[
@@ -48,16 +48,34 @@ def main():
             # )
             # print(completion.choices[0].message.content)
 
-            # ? Response()
-            response = openai_client.responses.create(
+            # ? Response() ——————————————————————————————
+            # response = openai_client.responses.create(
+            #     model=model_deployment,
+            #     instructions="You're a friendly chatmate",
+            #     input=input_text,
+            #     previous_response_id=last_response_id,
+            #     stream=True
+            # )
+
+            # print(response.output_text)
+            # last_response_id = response.id
+
+            # ? Streaming
+            stream = openai_client.responses.create(
                 model=model_deployment,
-                instructions="You're a friendly chatmate",
+                instructions="You are a helpful AI assistant that answers questions and provides information.",
                 input=input_text,
-                previous_response_id=last_response_id
+                previous_response_id=last_response_id,
+                stream=True
             )
 
-            print(response.output_text)
-            last_response_id = response.id
+            for event in stream:
+                if event.type == "response.output_text.delta":
+                    print(event.delta, end="")
+                elif event.type == "response.completed":
+                    last_response_id = event.response.id
+
+            # print()
 
     except Exception as ex:
         print(ex)
