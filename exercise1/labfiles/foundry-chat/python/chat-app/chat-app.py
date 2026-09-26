@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 # import namespaces
 from openai import OpenAI
 
-
 def main(): 
     # Clear the console
     # os.system('cls' if os.name == 'nt' else 'clear')
@@ -13,10 +12,14 @@ def main():
         # Get configuration settings 
         load_dotenv()
         azure_openai_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+        azure_openai_api_key = os.getenv("AZURE_OPENAI_API_KEY")
         model_deployment = os.getenv("MODEL_DEPLOYMENT")
 
         # Initialize the OpenAI client
-        openai_client = OpenAI()
+        openai_client = OpenAI(
+            base_url=azure_openai_endpoint,
+            api_key=azure_openai_api_key,
+        )
 
 
         # Loop until the user wants to quit
