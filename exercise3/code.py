@@ -50,3 +50,32 @@ def download_container_file(openai_client, annotation, downloaded_files):
     )
     downloaded_files[cache_key] = output_path
     return output_path
+
+def format_output_text(content_item, openai_client, downloaded_files):
+    """Replace sandbox file citations with local file paths."""
+    text = content_item.text or ""
+    replacements = []
+    referenced_files = set()
+
+    for annotation in content_item.annotations or []:
+        if getattr(annotation, "type", "") != "container_file_citation":
+            continue
+
+        output_path = download_container_file(openai_client, annotation, downloaded_files)
+        replacement_text = f"{annotation.filename} (saved to {output_path})"
+        referenced_files.add(output_path)
+
+        start_index = getattr(annotation, "start_index", None)
+        end_index = getattr(annotation, "end_index", None)
+        if start_index is not None and end_index is not None:
+            replacements.append((start_index, end_index, replacement_text))
+            continue
+
+        annotated_text = getattr(annotation, "text", "")
+        if annotated_text:
+            text = text.replace(annotated_text, replacement_text)
+
+    for start_index, end_index, replacement_text in sorted(replacements, reverse=True):
+        text = f"{text[:start_index]}{replacement_text}{text[end_index:]}"
+
+    return text, referenced_files
