@@ -8,9 +8,11 @@ from azure.identity import DefaultAzureCredential
 from azure.ai.projects.models import PromptAgentDefinition, FunctionTool
 from openai.types.responses.response_input_param import FunctionCallOutput, ResponseInputParam
 
+from functions import next_visible_event, calculate_observation_cost, generate_observation_report
+
 def main(): 
     # Clear the console
-    os.system('cls' if os.name=='nt' else 'clear')
+    # ! os.system('cls' if os.name=='nt' else 'clear')
 
     # Load environment variables from .env file
     load_dotenv()
@@ -107,7 +109,7 @@ def main():
         # Create a new agent with the function tools
         agent = project_client.agents.create_version(
             agent_name="astronomy-agent",
-            defination=PromptAgentDefinition(
+            definition=PromptAgentDefinition(
                 model=model_deployment,
                 instructions=
                     """You are an astronomy observations assistant that helps users find 
