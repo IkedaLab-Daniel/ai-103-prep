@@ -2,7 +2,10 @@ import os
 from dotenv import load_dotenv
 
 # Add references
-
+from azure.identity import DefaultAzureCredential
+from azure.ai.projects import AIProjectClient
+from azure.ai.projects.models import PromptAgentDefinition, MCPTool
+from openai.types.responses.response_input_param import McpApprovalRequest, ResponseInputParam
 
 # Load environment variables from .env file
 load_dotenv()
