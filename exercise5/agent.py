@@ -26,8 +26,16 @@ with(
     )
 
     # Create a new agent with the MCP tool
+    agent = project_client.agents.create_version(
+        agent_name="MyAgent",
+        definition=PromptAgentDefinition(
+            model=model_deployment,
+            instructions="You are a helpful agent that can use MCP tools to assist users. Use the available MCP tools to answer questions and perform tasks.",
+            tools=[mcp_tool],
+        ),
+    )
+    print(f"Agent created (id: {agent.id}, name: {agent.name}, version: {agent.version})")
     
-
     # Create conversation thread
     
 
