@@ -13,10 +13,13 @@ project_endpoint = os.getenv("PROJECT_ENDPOINT")
 model_deployment = os.getenv("MODEL_DEPLOYMENT_NAME")
 
 # Connect to the agents client
-
-
+with(
+    DefaultAzureCredential() as credential,
+    AIProjectClient(endpoint=project_endpoint, credential=credential) as project_client,
+    project_client.get_openai_client() as openai_client,
+):
     # Initialize agent MCP tool
-
+    
 
     # Create a new agent with the MCP tool
     
