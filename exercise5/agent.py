@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
 from azure.ai.projects.models import PromptAgentDefinition, MCPTool
-from openai.types.responses.response_input_param import McpApprovalRequest, ResponseInputParam
+from openai.types.responses.response_input_param import McpApprovalResponse, ResponseInputParam
 
 # Load environment variables from .env file
 load_dotenv()
@@ -48,6 +48,35 @@ with(
     )
 
     # Process any MCP approval requests that were generated
+    # The agent may issue several tool calls, each needing its own approval,
+    # so we loop until there are none left.
+    while True:
+        # Collect any MCP approval requests from the latest response
+        input_list: ResponseInputParam = []
+        for item in response.output:
+            if item.type == "mcp_approval_request":
+                if item.server_label == "api-specs" and item.id:
+                    # Automatically approve the MCP request to allow the agent to proceed
+                    input_list.append(
+                        McpApprovalResponse(
+                            type="mcp_approval_response",
+                            approve=True,
+                            approval_request_id=item.id,
+                        )
+                    )
+
+        # No more approvals needed -> the agent has produced its final response
+        if not input_list:
+            break
+
+        # Send the approval response back and retrieve the next response
+        response = openai_client.responses.create(
+            input=input_list,
+            previous_response_id=response.id,
+            extra_body={"agent_reference": {"name": agent.name, "type": "agent_reference"}},
+        )
+
+    print(f"\nAgent response: {response.output_text}")
     
     # Clean up resources by deleting the agent version
     
