@@ -19,7 +19,11 @@ with(
     project_client.get_openai_client() as openai_client,
 ):
     # Initialize agent MCP tool
-    
+    mcp_tool = MCPTool(
+        server_label="api-specs",
+        server_url="https://learn.microsoft.com/api/mcp",
+        require_approval="always",
+    )
 
     # Create a new agent with the MCP tool
     
