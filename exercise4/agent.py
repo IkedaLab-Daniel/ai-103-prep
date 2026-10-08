@@ -67,7 +67,42 @@ def main():
             strict=True,
         )
         # Define the observation report generation function tool
-        
+        report_tool = FunctionTool(
+            name="generate_observation_report",
+            description="Generate a report summarizing an astronomical observation",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "event_name": {
+                        "type": "string",
+                        "description": "the name of the astronomical event being observed",
+                    },
+                    "location": {
+                        "type": "string",
+                        "description": "the location of the observer",
+                    },
+                    "telescope_tier": {
+                        "type": "string",
+                        "description": "the tier of the telescope used for the observation (e.g. 'standard', 'advanced', 'premium')",
+                    },
+                    "hours": {
+                        "type": "number",
+                        "description": "the number of hours the telescope was used for the observation",
+                    },
+                    "priority": {
+                        "type": "string",
+                        "description": "the priority level of the observation (e.g. 'low', 'normal', 'high')",
+                    },
+                    "observer_name": {
+                        "type": "string",
+                        "description": "the name of the person who conducted the observation",
+                    },                   
+                },
+                "required": ["event_name", "location", "telescope_tier", "hours", "priority", "observer_name"],
+                "additionalProperties": False,
+            },
+            strict=True,
+        )
 
         # Create a new agent with the function tools
         
