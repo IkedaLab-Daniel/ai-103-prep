@@ -118,7 +118,7 @@ def main():
         )
         
         # Create a thread for the chat session
-        
+        conversation = openai_client.conversations.create() 
 
         while True:
             user_input = input("Enter a prompt for the astronomy agent. Use 'quit' to exit.\nUSER: ").strip()
@@ -127,21 +127,61 @@ def main():
                 break
 
             # Create a list to hold function call outputs that will be sent back as input to the agent
+            input_list: ResponseInputParam = []
 
             # Send a prompt to the agent
-           
+            openai_client.conversations.items.create(
+            conversation_id=conversation.id,
+            items=[{"type": "message", "role": "user", "content": user_input}],
+)
         
             # Retrieve the agent's response, which may include function calls
+            response = openai_client.responses.create(
+                conversation=conversation.id,
+                extra_body={"agent_reference": {"name": agent.name, "type": "agent_reference"}},
+                input=input_list,
+            )
 
+            # Check the run status for failures
+            if response.status == "failed":
+                print(f"Response failed: {response.error}")
 
             # Process function calls
-            
+            for item in response.output:
+                if item.type == "function_call":
+                    # Retrieve the matching function tool
+                    function_name = item.name
+                    result = None
+                    if item.name == "next_visible_event":
+                        result = next_visible_event(**json.loads(item.arguments))
+                    elif item.name == "calculate_observation_cost":
+                        result = calculate_observation_cost(**json.loads(item.arguments))
+                    elif item.name == "generate_observation_report":
+                        result = generate_observation_report(**json.loads(item.arguments))
+
+                    # Append the output text
+                    input_list.append(
+                        FunctionCallOutput(
+                            type="function_call_output",
+                            call_id=item.call_id,
+                            output=result,
+                        )
+                    )
+
 
             # Send function call outputs back to the model and retrieve a response
-            
+            if input_list:
+                response = openai_client.responses.create(
+                    conversation=conversation.id,
+                    input=input_list,
+                    extra_body={"agent_reference": {"name": agent.name, "type": "agent_reference"}},
+                )
+            # Display the agent's response
+            print(f"AGENT: {response.output_text}")
 
         # Delete the agent when done
-        
+        project_client.agents.delete_version(agent_name=agent.name, agent_version=agent.version)
+        print("Deleted agent.")
 
 if __name__ == '__main__': 
     main()
