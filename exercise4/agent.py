@@ -3,7 +3,10 @@ import json
 from dotenv import load_dotenv
 
 # Add references
-
+from azure.ai.projects import AIProjectClient
+from azure.identity import DefaultAzureCredential
+from azure.ai.projects.models import PromptAgentDefinition, FunctionTool
+from openai.types.responses.response_input_param import FunctionCallOutput, ResponseInputParam
 
 def main(): 
     # Clear the console
