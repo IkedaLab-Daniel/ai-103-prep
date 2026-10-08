@@ -24,11 +24,48 @@ def main():
         project_client.get_openai_client() as openai_client,
     ):
         # Define the event function tool
-        
+        event_tool = FunctionTool(
+            name="next_visible_event",
+            description="Get the next visible event in a given location",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "type": "string",
+                        "description": "continent to find the next visible event in (e.g. 'north_america', 'south_america', 'australia')",
+                    },
+                },
+                "required": ["location"],
+                "additionalProperties": False,
+            },
+            strict=True,
+        )
 
         # Define the observation cost function tool
-        
-
+        cost_tool = FunctionTool(
+            name="calculate_observation_cost",
+            description="Calculate the cost of an observation based on the telescope tier, number of hours, and priority level.",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "telescope_tier": {
+                        "type": "string",
+                        "description": "the tier of the telescope (e.g. 'standard', 'advanced', 'premium')",
+                    },
+                    "hours": {
+                        "type": "number",
+                        "description": "the number of hours for the observation",
+                    },
+                    "priority": {
+                        "type": "string",
+                        "description": "the priority level of the observation (e.g. 'low', 'normal', 'high')",
+                    },
+                },
+                "required": ["telescope_tier", "hours", "priority"],
+                "additionalProperties": False,
+            },
+            strict=True,
+        )
         # Define the observation report generation function tool
         
 
@@ -45,22 +82,6 @@ def main():
                 break
 
             # Create a list to hold function call outputs that will be sent back as input to the agent
-            event_tool = FunctionTool(
-                name="next_visible_event",
-                description="Get the next visible event in a given location",
-                parameters={
-                    "type": "object",
-                    "properties": {
-                        "location": {
-                            "type": "string",
-                            "description": "continent to find the next visible event in (e.g. 'north_america', 'south_america', 'australia')",
-                        },
-                    },
-                    "required": ["location"],
-                    "additionalProperties": False,
-                },
-                strict=True,
-            )
 
             # Send a prompt to the agent
            
