@@ -105,7 +105,17 @@ def main():
         )
 
         # Create a new agent with the function tools
-        
+        agent = project_client.agents.create_version(
+            agent_name="astronomy-agent",
+            defination=PromptAgentDefinition(
+                model=model_deployment,
+                instructions=
+                    """You are an astronomy observations assistant that helps users find 
+                    information about astronomical events and calculate telescope rental costs. 
+                    Use the available tools to assist users with their inquiries.""",
+                tools=[event_tool, cost_tool, report_tool],
+            )
+        )
         
         # Create a thread for the chat session
         
