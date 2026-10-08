@@ -18,8 +18,11 @@ def main():
     model_deployment = os.getenv("MODEL_DEPLOYMENT_NAME")
 
     # Connect to the project client
-    
-
+    with (
+        DefaultAzureCredential() as credential,
+        AIProjectClient(endpoint=project_endpoint, credential=credential) as project_client,
+        project_client.get_openai_client() as openai_client,
+    ):
         # Define the event function tool
         
 
