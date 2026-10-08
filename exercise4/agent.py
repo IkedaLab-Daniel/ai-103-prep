@@ -45,7 +45,22 @@ def main():
                 break
 
             # Create a list to hold function call outputs that will be sent back as input to the agent
-            
+            event_tool = FunctionTool(
+                name="next_visible_event",
+                description="Get the next visible event in a given location",
+                parameters={
+                    "type": "object",
+                    "properties": {
+                        "location": {
+                            "type": "string",
+                            "description": "continent to find the next visible event in (e.g. 'north_america', 'south_america', 'australia')",
+                        },
+                    },
+                    "required": ["location"],
+                    "additionalProperties": False,
+                },
+                strict=True,
+            )
 
             # Send a prompt to the agent
            
