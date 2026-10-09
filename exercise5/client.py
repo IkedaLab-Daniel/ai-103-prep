@@ -35,6 +35,9 @@ async def connect_to_server(exit_stack: AsyncExitStack):
     # Create an MCP client session
     session = await exit_stack.enter_async_context(ClientSession(stdio, write))
 
+    # ! Required handshake before any other call
+    await session.initialize()
+
     # List available tools
     response = await session.list_tools()
     tools = response.tools
